@@ -47,7 +47,7 @@ class MonthPagerAdapter(
         private var adapter: CalendarGridAdapter? = null
 
         fun bind(month: YearMonth, eventDates: Set<LocalDate>, selectedDate: LocalDate?, onDayClick: (LocalDate) -> Unit) {
-            tvMonth.text = "${month.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${month.year}"
+//            tvMonth.text = "${month.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${month.year}"
 
             val first = month.atDay(1)
             val daysInMonth = month.lengthOfMonth()
