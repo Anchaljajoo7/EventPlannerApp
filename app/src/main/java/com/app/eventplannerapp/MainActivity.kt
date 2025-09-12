@@ -59,30 +59,18 @@ class MainActivity : AppCompatActivity() {
         }
         updateHeader()
         var cachedEventDates: Set<LocalDate> = emptySet()
-        val monthAdapter = MonthPagerAdapter(YearMonth.now(), { cachedEventDates }) { date ->
+        var monthAdapter: MonthPagerAdapter? = null
+        val onDayClick: (LocalDate) -> Unit = { date ->
             val cal = Calendar.getInstance().apply {
                 set(date.year, date.monthValue - 1, date.dayOfMonth, 0, 0, 0)
                 set(Calendar.MILLISECOND, 0)
             }
             viewModel.setSelectedDate(cal.timeInMillis)
+            monthAdapter?.setSelectedDate(date)
         }
+        monthAdapter = MonthPagerAdapter(YearMonth.now(), { cachedEventDates }, onDayClick)
         monthPager.adapter = monthAdapter
         monthPager.setCurrentItem(monthAdapter.getCenterPosition(), false)
-
-        // Update the click handler to also set selected date
-        val originalClickHandler = { date: LocalDate ->
-            val cal = Calendar.getInstance().apply {
-                set(date.year, date.monthValue - 1, date.dayOfMonth, 0, 0, 0)
-                set(Calendar.MILLISECOND, 0)
-            }
-            viewModel.setSelectedDate(cal.timeInMillis)
-            monthAdapter.setSelectedDate(date)
-        }
-        
-        // Recreate the adapter with the updated click handler
-        val updatedMonthAdapter = MonthPagerAdapter(YearMonth.now(), { cachedEventDates }, originalClickHandler)
-        monthPager.adapter = updatedMonthAdapter
-        monthPager.setCurrentItem(updatedMonthAdapter.getCenterPosition(), false)
 
         btnPrev.setOnClickListener { monthPager.currentItem = monthPager.currentItem - 1 }
         btnNext.setOnClickListener { monthPager.currentItem = monthPager.currentItem + 1 }
@@ -90,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         monthPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val month = YearMonth.now().plusMonths((position - updatedMonthAdapter.getCenterPosition()).toLong())
+                val month = YearMonth.now().plusMonths((position - (monthAdapter?.getCenterPosition() ?: 0)).toLong())
                 shownMonth = month
                 updateHeader()
             }
@@ -107,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }.toSet()
             cachedEventDates = eventDates
-            updatedMonthAdapter.notifyDataSetChanged()
+            monthAdapter?.notifyDataSetChanged()
         }
 
         viewModel.eventsForSelectedDay.observe(this) { events ->
