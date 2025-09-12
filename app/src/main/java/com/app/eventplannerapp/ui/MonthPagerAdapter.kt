@@ -53,17 +53,27 @@ class MonthPagerAdapter(
             val daysInMonth = month.lengthOfMonth()
             val startShift = (first.dayOfWeek.ordinal + 7 - DayOfWeek.MONDAY.ordinal) % 7
             val days = buildList {
+                // Leading days from previous month to align the first week starting Monday
                 for (i in startShift downTo 1) add(first.minusDays(i.toLong()))
+                // All days in current month
                 repeat(daysInMonth) { add(first.plusDays(it.toLong())) }
+                // Trailing days from next month to fill the last week
+                val remainder = size % 7
+                if (remainder != 0) {
+                    val toFill = 7 - remainder
+                    val startNext = first.plusDays(daysInMonth.toLong())
+                    repeat(toFill) { add(startNext.plusDays(it.toLong())) }
+                }
             }
 
             if (adapter == null) {
-                adapter = CalendarGridAdapter(days, eventDates, onDayClick)
+                adapter = CalendarGridAdapter(days, eventDates, onDayClick, month)
                 rv.layoutManager = GridLayoutManager(itemView.context, 7)
                 rv.adapter = adapter
             } else {
                 adapter!!.updateDays(days)
                 adapter!!.updateEventDates(eventDates)
+                adapter!!.updateCurrentMonth(month)
             }
             adapter!!.setSelectedDate(selectedDate)
         }
