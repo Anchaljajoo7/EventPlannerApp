@@ -1,4 +1,4 @@
-package com.app.eventplannerapp.ui
+package com.app.eventplannerapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.app.eventplannerapp.R
 import java.time.LocalDate
+import java.time.YearMonth
 
 class CalendarGridAdapter(
     private var days: List<LocalDate>,
     private var eventDates: Set<LocalDate>,
     private val onDayClick: (LocalDate) -> Unit,
-    private var currentMonth: java.time.YearMonth
+    private var currentMonth: YearMonth
 ) : RecyclerView.Adapter<CalendarGridAdapter.DayViewHolder>() {
 
     private var selectedDate: LocalDate? = null
@@ -32,7 +33,7 @@ class CalendarGridAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateCurrentMonth(month: java.time.YearMonth) {
+    fun updateCurrentMonth(month: YearMonth) {
         currentMonth = month
         notifyDataSetChanged()
     }
@@ -58,25 +59,25 @@ class CalendarGridAdapter(
             date: LocalDate,
             hasEvent: Boolean,
             onDayClick: (LocalDate) -> Unit,
-            currentMonth: java.time.YearMonth,
+            currentMonth: YearMonth,
             isSelected: Boolean
         ) {
             tvDay.text = date.dayOfMonth.toString()
             indicator.visibility = if (hasEvent) View.VISIBLE else View.GONE
             itemView.setOnClickListener { onDayClick(date) }
             tvDay.background = null
-            
+
             // Set different text colors for current month vs other months
             val isCurrentMonth = date.year == currentMonth.year && date.month == currentMonth.month
             tvDay.setTextColor(
-                if (isCurrentMonth) 
+                if (isCurrentMonth)
                     itemView.context.getColor(android.R.color.black)
-                else 
+                else
                     itemView.context.getColor(android.R.color.darker_gray)
             )
 
             // Highlight today
-            val today = java.time.LocalDate.now()
+            val today = LocalDate.now()
             tvDay.background = when {
                 isSelected -> itemView.context.getDrawable(R.drawable.bg_selected_day)
                 date == today -> itemView.context.getDrawable(R.drawable.bg_today_day)
@@ -85,4 +86,3 @@ class CalendarGridAdapter(
         }
     }
 }
-

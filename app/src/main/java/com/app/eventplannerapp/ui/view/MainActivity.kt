@@ -1,62 +1,52 @@
-package com.app.eventplannerapp
+package com.app.eventplannerapp.ui.view
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
-import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.app.eventplannerapp.data.entity.EventEntity
-import com.app.eventplannerapp.ui.AddEditEventDialog
-import com.app.eventplannerapp.ui.DeleteEventDialog
-import com.app.eventplannerapp.ui.EventAdapter
-import com.app.eventplannerapp.ui.EventViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.viewpager2.widget.ViewPager2
-import com.app.eventplannerapp.ui.CalendarGridAdapter
-import com.app.eventplannerapp.ui.MonthPagerAdapter
-import java.time.DayOfWeek
+import com.app.eventplannerapp.ui.view.UpcomingEventsActivity
+import com.app.eventplannerapp.data.entity.EventEntity
+import com.app.eventplannerapp.databinding.ActivityMainBinding
+import com.app.eventplannerapp.dialog.AddEditEventDialog
+import com.app.eventplannerapp.dialog.DeleteEventDialog
+import com.app.eventplannerapp.ui.adapter.EventAdapter
+import com.app.eventplannerapp.ui.viewmodel.EventViewModel
+import com.app.eventplannerapp.ui.adapter.MonthPagerAdapter
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: EventViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val monthPager = findViewById<ViewPager2>(R.id.monthPager)
-        val btnPrev = findViewById<ImageButton>(R.id.btnPrev)
-        val btnNext = findViewById<ImageButton>(R.id.btnNext)
-        val tvMonthLabel = findViewById<TextView>(R.id.tvMonthLabel)
-        val recycler = findViewById<RecyclerView>(R.id.rvEvents)
-        val fab = findViewById<FloatingActionButton>(R.id.fabAdd)
-
         val adapter = EventAdapter(
             onClick = { event -> showAddEditDialog(event) },
             onLongClick = { event -> showDeleteConfirmationDialog(event) }
         )
-        recycler.adapter = adapter
+        binding.rvEvents.adapter = adapter
 
         var shownMonth = YearMonth.now()
         fun updateHeader() {
-            tvMonthLabel.text = "${shownMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${shownMonth.year}"
+            binding.tvMonthLabel.text = "${shownMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${shownMonth.year}"
         }
         updateHeader()
         var cachedEventDates: Set<LocalDate> = emptySet()
@@ -70,13 +60,13 @@ class MainActivity : AppCompatActivity() {
             monthAdapter?.setSelectedDate(date)
         }
         monthAdapter = MonthPagerAdapter(YearMonth.now(), { cachedEventDates }, onDayClick)
-        monthPager.adapter = monthAdapter
-        monthPager.setCurrentItem(monthAdapter.getCenterPosition(), false)
+        binding.monthPager.adapter = monthAdapter
+        binding.monthPager.setCurrentItem(monthAdapter.getCenterPosition(), false)
 
-        btnPrev.setOnClickListener { monthPager.currentItem = monthPager.currentItem - 1 }
-        btnNext.setOnClickListener { monthPager.currentItem = monthPager.currentItem + 1 }
+        binding.btnPrev.setOnClickListener { binding.monthPager.currentItem = binding.monthPager.currentItem - 1 }
+        binding.btnNext.setOnClickListener { binding.monthPager.currentItem = binding.monthPager.currentItem + 1 }
 
-        monthPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.monthPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 val month = YearMonth.now().plusMonths((position - (monthAdapter?.getCenterPosition() ?: 0)).toLong())
@@ -88,11 +78,11 @@ class MainActivity : AppCompatActivity() {
         // Observe all events and update indicators
         viewModel.allEvents.observe(this) { events ->
             val eventDates = events.map {
-                val cal = java.util.Calendar.getInstance().apply { timeInMillis = it.startTimeMillis }
+                val cal = Calendar.getInstance().apply { timeInMillis = it.startTimeMillis }
                 LocalDate.of(
-                    cal.get(java.util.Calendar.YEAR),
-                    cal.get(java.util.Calendar.MONTH) + 1,
-                    cal.get(java.util.Calendar.DAY_OF_MONTH)
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH) + 1,
+                    cal.get(Calendar.DAY_OF_MONTH)
                 )
             }.toSet()
             cachedEventDates = eventDates
@@ -103,8 +93,13 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(events)
         }
 
-        fab.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             showAddEditDialog(null)
+        }
+
+        binding.btnUpcomingEvents.setOnClickListener {
+            val intent = Intent(this, UpcomingEventsActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -139,4 +134,5 @@ class MainActivity : AppCompatActivity() {
             }
         ).show(supportFragmentManager, "DeleteEventDialog")
     }
+
 }

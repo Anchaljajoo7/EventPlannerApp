@@ -1,11 +1,11 @@
-package com.app.eventplannerapp.ui
+package com.app.eventplannerapp.dialog
 
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.app.eventplannerapp.R
 import com.app.eventplannerapp.data.entity.EventEntity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class DeleteEventDialog(
     private val event: EventEntity,

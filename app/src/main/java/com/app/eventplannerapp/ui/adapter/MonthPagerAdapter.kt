@@ -1,4 +1,4 @@
-package com.app.eventplannerapp.ui
+package com.app.eventplannerapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app.eventplannerapp.R
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import com.app.eventplannerapp.R
 
 class MonthPagerAdapter(
     private val initialMonth: YearMonth,
@@ -79,4 +79,3 @@ class MonthPagerAdapter(
         }
     }
 }
-

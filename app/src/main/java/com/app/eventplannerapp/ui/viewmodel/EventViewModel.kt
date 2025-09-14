@@ -1,4 +1,4 @@
-package com.app.eventplannerapp.ui
+package com.app.eventplannerapp.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -15,7 +15,7 @@ import java.util.Calendar
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: EventRepository =
-        EventRepository(EventDatabase.getInstance(application).eventDao())
+        EventRepository(EventDatabase.Companion.getInstance(application).eventDao())
 
     private val _selectedDayMillis = MutableLiveData<Long>(startOfToday())
     val selectedDayMillis: LiveData<Long> = _selectedDayMillis
@@ -34,7 +34,13 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addEvent(title: String, description: String, eventTimeMillis: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addEvent(EventEntity(title = title, description = description, startTimeMillis = eventTimeMillis))
+            repository.addEvent(
+                EventEntity(
+                    title = title,
+                    description = description,
+                    startTimeMillis = eventTimeMillis
+                )
+            )
         }
     }
 
@@ -49,13 +55,14 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     private fun startOfToday(): Long = startOfDay(System.currentTimeMillis())
 
     private fun startOfDay(timeMillis: Long): Long {
-        val cal = Calendar.getInstance().apply { timeInMillis = timeMillis; set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0) }
+        val cal = Calendar.getInstance().apply { timeInMillis = timeMillis; set(Calendar.HOUR_OF_DAY, 0); set(
+            Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0) }
         return cal.timeInMillis
     }
 
     private fun endOfDay(dayStartMillis: Long): Long {
-        val cal = Calendar.getInstance().apply { timeInMillis = dayStartMillis; set(Calendar.HOUR_OF_DAY, 23); set(Calendar.MINUTE, 59); set(Calendar.SECOND, 59); set(Calendar.MILLISECOND, 999) }
+        val cal = Calendar.getInstance().apply { timeInMillis = dayStartMillis; set(Calendar.HOUR_OF_DAY, 23); set(
+            Calendar.MINUTE, 59); set(Calendar.SECOND, 59); set(Calendar.MILLISECOND, 999) }
         return cal.timeInMillis + 1
     }
 }
-

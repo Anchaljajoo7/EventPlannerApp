@@ -8,7 +8,6 @@ data class EventEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val description: String,
-    // Start time in epoch millis
     val startTimeMillis: Long
 )
 

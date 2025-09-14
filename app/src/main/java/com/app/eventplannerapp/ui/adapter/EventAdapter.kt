@@ -1,14 +1,12 @@
-package com.app.eventplannerapp.ui
+package com.app.eventplannerapp.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.app.eventplannerapp.R
 import com.app.eventplannerapp.data.entity.EventEntity
+import com.app.eventplannerapp.databinding.ItemEventBinding
 import java.text.DateFormat
 
 class EventAdapter(
@@ -17,25 +15,22 @@ class EventAdapter(
 ) : ListAdapter<EventEntity, EventAdapter.EventViewHolder>(DIFF) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
-        return EventViewHolder(view)
+        val binding = ItemEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return EventViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         holder.bind(getItem(position), onClick, onLongClick)
     }
 
-    class EventViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.tvTitle)
-        private val description: TextView = itemView.findViewById(R.id.tvDescription)
-        private val time: TextView = itemView.findViewById(R.id.tvTime)
+    class EventViewHolder(private val binding: ItemEventBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: EventEntity, onClick: (EventEntity) -> Unit, onLongClick: (EventEntity) -> Unit) {
-            title.text = item.title
-            description.text = item.description
-            time.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(item.startTimeMillis)
-            itemView.setOnClickListener { onClick(item) }
-            itemView.setOnLongClickListener { onLongClick(item); true }
+            binding.tvTitle.text = item.title
+            binding.tvDescription.text = item.description
+            binding.tvTime.text = DateFormat.getTimeInstance(DateFormat.SHORT).format(item.startTimeMillis)
+            binding.root.setOnClickListener { onClick(item) }
+            binding.root.setOnLongClickListener { onLongClick(item); true }
         }
     }
 
@@ -46,5 +41,3 @@ class EventAdapter(
         }
     }
 }
-
-
