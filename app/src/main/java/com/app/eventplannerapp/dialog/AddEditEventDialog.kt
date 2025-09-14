@@ -49,7 +49,7 @@ class AddEditEventDialog(
             .setTitle(if (initialTitle == null) R.string.add_event else R.string.edit_event)
             .setView(binding.root)
             .setPositiveButton(R.string.save) { _, _ ->
-                onConfirm(binding.etTitle.text.toString(), binding.etDescription.text.toString(), chosenTimeMillis)
+//                onConfirm(binding.etTitle.text.toString(), binding.etDescription.text.toString(), chosenTimeMillis)
             }
             .setNeutralButton(R.string.pick_date) { _, _ ->
                 // Don't dismiss the dialog, just show the date picker
@@ -63,6 +63,30 @@ class AddEditEventDialog(
         dialog.setOnShowListener {
             val pickDateButton = dialog.getButton(Dialog.BUTTON_NEUTRAL)
             val pickTimeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE)
+            val saveButton = dialog.getButton(Dialog.BUTTON_POSITIVE)
+
+            saveButton.setOnClickListener {
+                val title = binding.etTitle.text.toString().trim()
+                val description = binding.etDescription.text.toString().trim()
+
+                var isValid = true
+
+                if (title.isEmpty()) {
+                    binding.etTitle.error = "Required field"
+                    isValid = false
+                }
+
+                if (description.isEmpty()) {
+                    binding.etDescription.error = "Required field"
+                    isValid = false
+                }
+
+                if (isValid) {
+                    onConfirm(title, description, chosenTimeMillis)
+                    dialog.dismiss()
+                }
+            }
+
 
             pickDateButton.setOnClickListener {
                 // Create and show date picker
