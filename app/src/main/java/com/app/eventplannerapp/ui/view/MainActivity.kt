@@ -38,6 +38,24 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        initialSetup()
+        clickEvent()
+
+    }
+
+    private fun clickEvent() {
+        binding.fabAdd.setOnClickListener {
+            showAddEditDialog(null)
+        }
+
+        binding.btnUpcomingEvents.setOnClickListener {
+            val intent = Intent(this, UpcomingEventsActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun initialSetup() {
+
         val adapter = EventAdapter(
             onClick = { event -> showAddEditDialog(event) },
             onLongClick = { event -> showDeleteConfirmationDialog(event) }
@@ -93,14 +111,6 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(events)
         }
 
-        binding.fabAdd.setOnClickListener {
-            showAddEditDialog(null)
-        }
-
-        binding.btnUpcomingEvents.setOnClickListener {
-            val intent = Intent(this, UpcomingEventsActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     private fun showAddEditDialog(event: EventEntity?) {

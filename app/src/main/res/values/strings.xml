@@ -10,4 +10,9 @@
     <string name="no">No</string>
     <string name="pick_date">Pick Date</string>
     <string name="upcoming_events">Upcoming Events</string>
+    <string name="selected_date">Selected Date: %1$s</string>
+    <string name="selected_time">Selected Time: %1$s</string>
+    <string name="required_field">Required field</string>
+    <string name="select_date">Select Date</string>
+    <string name="no_upcoming_events">No upcoming events</string>
 </resources>

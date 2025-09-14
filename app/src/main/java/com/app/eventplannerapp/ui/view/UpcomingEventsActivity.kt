@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.eventplannerapp.R
 import com.app.eventplannerapp.databinding.ActivityUpcomingEventsBinding
 import com.app.eventplannerapp.ui.viewmodel.EventViewModel
 import com.app.eventplannerapp.ui.adapter.UpcomingEventAdapter
@@ -38,7 +39,7 @@ class UpcomingEventsActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Upcoming Events"
+        supportActionBar?.title = getString(R.string.upcoming_events)
 
         binding.toolbar.setNavigationOnClickListener {
             finish()
@@ -48,12 +49,8 @@ class UpcomingEventsActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         adapter = UpcomingEventAdapter(
             onClick = { event ->
-                // Edit event - you can implement this later
-                // For now, just show a toast or handle as needed
             },
             onLongClick = { event ->
-                // Delete event - you can implement this later
-                // For now, just show a toast or handle as needed
             }
         )
 
@@ -66,7 +63,7 @@ class UpcomingEventsActivity : AppCompatActivity() {
             if (events.isEmpty()) {
                 binding.rvUpcomingEvents.visibility = View.GONE
                 binding.tvEmptyUpcoming.visibility = View.VISIBLE
-                binding.tvEmptyUpcoming.text = "No upcoming events"
+                binding.tvEmptyUpcoming.text = getString(R.string.no_upcoming_events)
             } else {
                 binding.rvUpcomingEvents.visibility = View.VISIBLE
                 binding.tvEmptyUpcoming.visibility = View.GONE

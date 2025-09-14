@@ -33,13 +33,14 @@ class AddEditEventDialog(
 
         // Update the date and time displays
         fun updateDateDisplay() {
-            val dateString = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault()).format(chosenTimeMillis)
-            binding.tvSelectedDate.text = "Selected Date: $dateString"
+            val dateString =
+                SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault()).format(chosenTimeMillis)
+            binding.tvSelectedDate.text = getString(R.string.selected_date, dateString)
         }
 
         fun updateTimeDisplay() {
             val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(chosenTimeMillis)
-            binding.tvSelectedTime.text = "Selected Time: $timeString"
+            binding.tvSelectedTime.text = getString(R.string.selected_time, timeString)
         }
 
         updateDateDisplay()
@@ -59,7 +60,7 @@ class AddEditEventDialog(
             }
             .create()
 
-        // Override the button click listeners to prevent dialog dismissal
+
         dialog.setOnShowListener {
             val pickDateButton = dialog.getButton(Dialog.BUTTON_NEUTRAL)
             val pickTimeButton = dialog.getButton(Dialog.BUTTON_NEGATIVE)
@@ -72,12 +73,12 @@ class AddEditEventDialog(
                 var isValid = true
 
                 if (title.isEmpty()) {
-                    binding.etTitle.error = "Required field"
+                    binding.etTitle.error = getString(R.string.required_field)
                     isValid = false
                 }
 
                 if (description.isEmpty()) {
-                    binding.etDescription.error = "Required field"
+                    binding.etDescription.error = getString(R.string.required_field)
                     isValid = false
                 }
 
@@ -91,13 +92,14 @@ class AddEditEventDialog(
             pickDateButton.setOnClickListener {
                 // Create and show date picker
                 val datePicker = MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select Date")
+                    .setTitleText(getString(R.string.select_date))
                     .setSelection(chosenTimeMillis)
                     .build()
 
                 datePicker.addOnPositiveButtonClickListener { selectedDate ->
                     // Update the chosen time with the selected date (keeping the same time)
-                    val selectedCal = Calendar.getInstance().apply { timeInMillis = chosenTimeMillis }
+                    val selectedCal =
+                        Calendar.getInstance().apply { timeInMillis = chosenTimeMillis }
                     val newCal = Calendar.getInstance().apply { timeInMillis = selectedDate }
 
                     // Keep the original time but update the date
@@ -126,7 +128,8 @@ class AddEditEventDialog(
                     .build()
                 picker.addOnPositiveButtonClickListener {
                     // Update the chosen time with the selected time
-                    val selectedCal = Calendar.getInstance().apply { timeInMillis = chosenTimeMillis }
+                    val selectedCal =
+                        Calendar.getInstance().apply { timeInMillis = chosenTimeMillis }
                     selectedCal.set(Calendar.HOUR_OF_DAY, picker.hour)
                     selectedCal.set(Calendar.MINUTE, picker.minute)
                     selectedCal.set(Calendar.SECOND, 0)
