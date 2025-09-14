@@ -4,4 +4,8 @@
     <string name="edit_event">Edit Event</string>
     <string name="pick_time">Pick time</string>
     <string name="save">Save</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="delete_event_confirmation">Are you sure you want to delete this event?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

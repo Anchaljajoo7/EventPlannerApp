@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.eventplannerapp.data.entity.EventEntity
 import com.app.eventplannerapp.ui.AddEditEventDialog
+import com.app.eventplannerapp.ui.DeleteEventDialog
 import com.app.eventplannerapp.ui.EventAdapter
 import com.app.eventplannerapp.ui.EventViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = EventAdapter(
             onClick = { event -> showAddEditDialog(event) },
-            onLongClick = { event -> viewModel.deleteEvent(event) }
+            onLongClick = { event -> showDeleteConfirmationDialog(event) }
         )
         recycler.adapter = adapter
 
@@ -128,5 +129,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         ).show(supportFragmentManager, "AddEditEventDialog")
+    }
+
+    private fun showDeleteConfirmationDialog(event: EventEntity) {
+        DeleteEventDialog(
+            event = event,
+            onConfirm = { eventToDelete ->
+                viewModel.deleteEvent(eventToDelete)
+            }
+        ).show(supportFragmentManager, "DeleteEventDialog")
     }
 }

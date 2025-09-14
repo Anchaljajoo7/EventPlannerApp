@@ -20,7 +20,7 @@ interface EventDao {
     @Delete
     suspend fun delete(event: EventEntity)
 
-    @Query("SELECT * FROM events WHERE startTimeMillis BETWEEN :startInclusive AND :endExclusive ORDER BY startTimeMillis ASC")
+    @Query("SELECT * FROM events WHERE startTimeMillis >= :startInclusive AND startTimeMillis < :endExclusive ORDER BY startTimeMillis ASC")
     fun eventsBetween(startInclusive: Long, endExclusive: Long): LiveData<List<EventEntity>>
 
     @Query("SELECT * FROM events WHERE startTimeMillis >= :now ORDER BY startTimeMillis ASC LIMIT :limit")
