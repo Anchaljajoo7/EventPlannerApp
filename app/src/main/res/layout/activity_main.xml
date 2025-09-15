@@ -8,6 +8,30 @@
     android:background="@color/white"
     tools:context=".ui.view.MainActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="@string/calendar"
+        app:titleTextColor="@android:color/white"
+ />
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnUpcomingEvents"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/upcoming_events"
+        android:textSize="14sp"
+        app:icon="@android:drawable/ic_menu_recent_history"
+        app:iconGravity="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
     <LinearLayout
         android:id="@+id/monthHeader"
         android:layout_width="0dp"
@@ -17,7 +41,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/btnUpcomingEvents">
 
         <ImageButton
             android:id="@+id/btnPrev"
@@ -47,20 +71,6 @@
             android:src="@android:drawable/ic_media_next" />
 
     </LinearLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnUpcomingEvents"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/upcoming_events"
-        android:textSize="14sp"
-        app:icon="@android:drawable/ic_menu_recent_history"
-        app:iconGravity="textStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monthHeader" />
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/monthPager"
         android:layout_width="0dp"
@@ -68,7 +78,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnUpcomingEvents" />
+        app:layout_constraintTop_toBottomOf="@id/monthHeader" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
